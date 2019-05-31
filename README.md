@@ -3,7 +3,7 @@ Comparing the system time of Alphabeta and Minimax.
 The comparison has been made between the minimax and alphabeta tree pruning.
 
  **Assumptions**: 
-1.) The tree supports the binary tree i.e. the algorithm is suitable to play a game tic tac toe.
+1.) The tree supports the binary tree.
 2.) The input case with which it is compared is : (8 nodes:1,2,3,4,5,6,7,8 as values).
 3.) Intialisation of node structure has been specified in the code.
 
