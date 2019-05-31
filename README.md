@@ -73,3 +73,6 @@ user	0m0.004s
 sys	0m0.000s
 
 Such a small input case also had a significant difference of 2 ms in the execution time, thus proving the alphabeta pruning to be very effective in the practical situations.
+
+**Implementation of Tic-Tac-Toe Game**
+The implementation follows the position point concept and the board game states. The AI build is just a combination of several win states and the state space search using Alpha Beta Pruning.
