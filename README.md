@@ -32,21 +32,13 @@ function alphabeta(node, depth, α, β, maximizingPlayer) is
 
 **shubhendra@shubhendra-Inspiron-660s:~/Desktop$ time ./minimax**
 8
-
 1
-
 2
-
 3
-
 4
-
 5
-
 6
-
 7
-
 8
 
 Height is:3
