@@ -5,7 +5,7 @@ char a[3][3] = {'-', '-', '-','-','-','-','-','-','-'};
 //vsisited is for ensuring that how many turns are left and what all are allocated.
 int visited[3][3] = {0,0,0,0,0,0,0,0,0};
 
-int equal1(char a,char b ,char c) {
+int equal1(char a,char b, char c) {
     if(a==b && b==c) {
         return 1;
     }
@@ -15,27 +15,24 @@ int equal1(char a,char b ,char c) {
 
 // -1 denotes the comp win and 1 denotes the player win.
 char checkWin() {
-    if(equal1(a[0][0],a[1][1],a[2][2])) {
-        if(a[0][0] == 'x')
+    if(equal1(a[0][0],a[1][1],'x') || equal1(a[2][2],a[1][1],'x')  || equal1(a[0][0],a[2][2],'x') ) {
             return 'x';
-        if(a[0][0] == 'o')
+        }
+        if(equal1(a[0][0],a[1][1],'o') || equal1(a[2][2],a[1][1],'o')  || equal1(a[0][0],a[2][2],'o') ) {
             return 'o';
-    }
+        }
     
     for(int i=0;i<3;i++) {
-        if(equal1(a[i][0] ,a[i][1],a[i][2])) {
-            if(a[i][0] == 'x')
+        if(equal1(a[i][1],a[i][2],'x') || equal1(a[i][0] ,a[i][2],'x') || equal1(a[i][0] ,a[i][1],'x'))
                 return 'x';
-            if(a[i][0] == 'o')
+        if(equal1(a[i][1],a[i][2],'o') || equal1(a[i][0] ,a[i][2],'o') ||equal1(a[i][0] ,a[i][1],'o'))
                 return 'o';
-        }
-    }
+        
 
     for(int i=0;i<3;i++) {
-        if(equal1(a[0][i] ,a[1][i],a[2][i])) {
-            if(a[0][i] == 'x')
+        if(equal1(a[0][i] ,a[2][i],'x') || equal1(a[0][i] ,a[1][i],'x') || equal1(a[1][i],a[2][i],'x') )
                 return 'x';
-            if(a[0][i] == 'o')
+        if(equal1(a[0][i] ,a[2][i],'o') || equal1(a[0][i] ,a[1][i],'o') || equal1(a[1][i],a[2][i],'o') )
                 return 'o';
         }
     }
@@ -53,13 +50,56 @@ int board_is_full() {
     return 1;
 }
 
+char IsWin(char a[][3], char state) {
+    if(equal1(a[0][0],a[1][1],a[2][2])) {
+        if(a[0][0] == state)
+            return 'W';
+        if(a[0][0] != state && a[0][0]!='-')
+            return 'L';
+    }
+    
+    for(int i=0;i<3;i++) {
+        if(equal1(a[i][0] ,a[i][1],a[i][2])) {
+            if(a[i][0] == state)
+                return 'W';
+            if(a[i][0] != state && a[i][0]!='-')
+                return 'L';
+        }
+    }
+
+    for(int i=0;i<3;i++) {
+        if(equal1(a[0][i] ,a[1][i],a[2][i])) {
+            if(a[0][i] == state)
+                return 'W';
+            if(a[0][i] != state && a[0][i]!='-')
+                return 'L';
+        }
+    }
+    
+    return '-';
+}
+
+int print_state(char a[][3]) {
+        for(int i=0;i<3;i++) {
+            cout<<endl;
+            for(int j=0;j<3;j++) {
+                    cout<<a[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+}
 
 pair<pair<int,int>,int> Alphabeta(char state ,char temp[3][3], int v[3][3], int depth, int alpha, int beta) {
     pair<int, int> best_mov = make_pair(-1, -1);
-    int best = (state == 'x')? -10:10;
-    if (board_is_full())
-    {
-        best = checkWin();
+    int best = 0;
+    state == 'o'? best = -1000: best = 1000;
+    if (board_is_full() || IsWin(temp,state)!='-' )
+    {   cout<<"Leaf Reached";
+        print_state(temp);
+        if(IsWin(temp,state) == 'L')
+            best = -1000;
+        if(IsWin(temp,state) == 'W')
+            best = 1000;
         return make_pair(best_mov, best);
     }
     for(int i=0;i<3;i++) {
@@ -68,27 +108,35 @@ pair<pair<int,int>,int> Alphabeta(char state ,char temp[3][3], int v[3][3], int 
                 temp[i][j] = state;
                 pair<int, int> curr_mov = make_pair(i,j);
                 v[i][j] = 1;
+                print_state(temp);
                 if(state == 'o') {
                     int value = Alphabeta('x', temp, v, depth+1, alpha , beta).second;
-                        best_mov = curr_mov;  
-                        alpha = max(alpha, best);
-                        if(alpha>=beta) {
-                            cout<<"Pruning has occured"<<endl;
-                            break;
+                    cout<<best<<" "<<value<<endl;
+                        if(best<value) {
+                            best = value - depth * 10;
+                            best_mov = curr_mov;
+                            alpha = max(alpha, best);
+                            if(alpha>=beta) {
+                                cout<<"Pruning has occured"<<endl;
+                                break;
+                        }
                     }
                 }
-                else {
+                if(state == 'x') {
                     
                     int value = Alphabeta('o', temp, v, depth+1, alpha , beta).second;
-                        best_mov = curr_mov;  
-                        beta = min(beta, best);
-                        temp[i][j] = '-';
-                        if(alpha>=beta) {
-                            cout<<"Pruning has occured"<<endl;
-                            break;
+                    print_state(temp);
+                        if(best>value) {
+                            best = value + depth * 10;
+                            best_mov = curr_mov;  
+                            beta = min(beta, best);
+                            if(alpha>=beta) {
+                                cout<<"Pruning has occured"<<endl;
+                                break;
+                        }
                     }
                 }
-                temp[i][j] = '-';
+                temp[i][j] == '-';
 
             }
         }
@@ -112,13 +160,8 @@ int main() {
         cin>>cl;
         a[rw][cl] = 'x';
         visited[rw][cl] = 1; //indicates that it is visited
-        if(checkWin() == 'x') {
-            cout<<"Player wins"<<endl;
-            break;
-        }
-        if(checkWin() == 'o') {
-            cout<<"Comp wins"<<endl;
-        }
+        if(IsWin(a,'x') == 'W') {cout<<"Player Wins"; break;}
+        if(IsWin(a,'o') == 'W') {cout<<"Comp Wins"; break;}
         for(int i=0;i<3;i++) {
             for(int j=0;j<3;j++) {
                 temp[i][j] = a[i][j];
@@ -132,22 +175,16 @@ int main() {
         pair<pair<int,int>,int> mov = Alphabeta('o',temp,v,0,INT_MIN,INT_MAX);
         rw = mov.first.first;
         cl = mov.first.second;
-        cout<<rw<<cl<<endl;
         a[rw][cl] = 'o';
         visited[rw][cl] = 1;
-        if(checkWin() == 'x') {
-            cout<<"Player wins"<<endl;
-            break;
-        }
-        if(checkWin() == 'o') {
-            cout<<"Comp wins"<<endl;
-        }
-
+        if(IsWin(a,'x') == 'W') {cout<<"Player Wins"; break;}
+        if(IsWin(a,'o') == 'W') {cout<<"Comp Wins"; break;}
         for(int i=0;i<3;i++) {
             cout<<endl;
             for(int j=0;j<3;j++) {
                     cout<<a[i][j]<<" ";
             }
+            cout<<endl;
         }
         n = n-2;
     }
