@@ -64,6 +64,8 @@ sys	0m0.000s
 
 Height is:3
 
+
+
 The max value is :6
 
 **real	0m4.944s**
@@ -76,3 +78,8 @@ Such a small input case also had a significant difference of 2 ms in the executi
 
 **Implementation of Tic-Tac-Toe Game**
 The implementation follows the position point concept and the board game states. The AI build is just a combination of several win states and the state space search using Alpha Beta Pruning.
+
+
+**The project extension for testing various optimizations techniques regarding parallel Alpha Beta Pruning**
+More information is on 
+https://arxiv.org/abs/1908.11660
