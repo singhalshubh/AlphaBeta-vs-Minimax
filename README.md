@@ -81,5 +81,7 @@ The implementation follows the position point concept and the board game states.
 
 
 **The project extension for testing various optimizations techniques regarding parallel Alpha Beta Pruning**
-More information is on 
+More information is described in my paper : 
 https://arxiv.org/abs/1908.11660
+https://ieeexplore.ieee.org/document/8971591
+
